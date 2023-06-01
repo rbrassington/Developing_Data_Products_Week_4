@@ -1,0 +1,98 @@
+---
+title: "Developing Data Products Week 4 Assignment"
+author: "Riley Brassington"
+date: "2023-05-31"
+output:
+  slidy_presentation: default
+  ioslides_presentation: default
+---
+
+```{r setup, include=FALSE}
+
+```
+
+## Coursera Peer Graded Assignment
+
+-   Write a shiny application with associated supporting documentation.
+-   The documentation should be thought of as whatever a user will need to get started using your application.
+-   Deploy the application on Rstudio's shiny server
+-   Share the application link by pasting it into the provided text box
+-   Share your server.R and ui.R code on github
+
+## Project Overview
+
+
+The files are available at Github Repository <https://github.com/rbrassington/Developing_Data_Products_Week_4>
+
+-   This assignment was jokingly done because I am hopeless with R
+
+## Application Panel
+
+
+MAIN PANEL:
+
+Slide the tab to see how many breakdowns I have per year of doing this course
+
+
+
+
+## Ui.R
+library(shiny)
+
+ui <- fluidPage(
+
+    # Application title
+    titlePanel("Amount of breakdowns I have per year of doing this course"),
+
+    # Sidebar with a slider input for number of bins 
+    sidebarLayout(
+        sidebarPanel(
+            sliderInput("bins",
+                        "Number of bins:",
+                        min = 1,
+                        max = 30,
+                        value = 10)
+        ),
+
+        # Show a plot of the generated distribution
+        mainPanel(
+           plotOutput("distPlot")
+        )
+    )
+)
+
+server <- function(input, output) {
+
+    output$distPlot <- renderPlot({
+        # generate bins based on input$bins from ui.R
+        x    <- faithful[, 2]
+        bins <- seq(min(x), max(x), length.out = input$bins + 1)
+
+        # draw the histogram with the specified number of bins
+        hist(x, breaks = bins, col = 'darkgray', border = 'white',
+             xlab = 'How long it will take me to finish this course (years)',
+             main = 'Histogram of years taken to complete course')
+    })
+})
+
+## server.R
+library(shiny)
+
+shinyServer(function(input, output) {
+  
+  output$distPlot <- renderPlot({
+    
+    # generate bins based on input$bins from ui.R
+    x    <- faithful[, 2]
+    bins <- seq(min(x), max(x), length.out = input$bins + 1)
+    
+    # draw the histogram with the specified number of bins
+    hist(x, breaks = bins, col = 'darkgray', border = 'white',
+         xlab = 'Number of breakdowns before I finish (in years)',
+         main = 'Histogram of breakdown amount')
+    
+  })
+  
+})
+
+## Thank you 
